@@ -52,13 +52,28 @@
 </body>
 <script src="js/jquery.js"></script>
     <script>
+        $.ajax({
+                url: "cgi-xjh/start_receive_frame",
+                dataType: 'text',
+                type: "GET",
+                success: function (data)
+                {
+                    console.log("success" + data);
+                },
+                error: function ()
+                {
+                    console.log("error");
+                }
+        });
+
+
         //循环执行，每隔1秒钟执行一次 1000 
         var timer = 1;
         var img = document.getElementById("display");
         var t1 = window.setInterval(refreshCount, 100);
         function refreshCount() {
             console.log("ready");
-            img.src = "cgi-xjh/get_video_picture?filename=icon/jpg/" + timer + '.jpg';
+            img.src = "cgi-xjh/get_video_picture"; //?filename=icon/jpg/" + timer + '.jpg';
             timer = timer > 2 ? 1 : timer + 1;
         }
         //去掉定时器的方法  

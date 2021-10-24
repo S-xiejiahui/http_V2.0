@@ -60,11 +60,6 @@ void    Rio_readinitb(rio_t *rp, int fd);
 ssize_t Rio_readlineb(rio_t *rp, void *usrbuf, size_t maxlen);
 ssize_t Rio_readnb(rio_t *rp, void *usrbuf, size_t n);
 
-
-int open_listenfd(char *port);
-
-int Open_listenfd(char *port);
-
 int Accept(int s, struct sockaddr *addr, socklen_t *addrlen);
 
 handler_t  *signal_r(int signum, handler_t *handler);

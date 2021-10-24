@@ -4,6 +4,8 @@
 #include "web_post.h"
 #include "server.h"
 
+#include <pthread.h>
+
 /****************************************************
  * @brief  Check whether it is GET or POST
  * @note
@@ -88,10 +90,10 @@ void deal_with_client_request(int fd)
  * @param  *index:
  * @retval None
  ***************************************************/
-void Logo(const char *ipaddr,const char *port)
+void Logo(const char *ipaddr, int port)
 {
     printf("-----------------------------------------------------------\n");
-    printf("         URL = http://%s:%s/app.html              \n", ipaddr, port);
+    printf("         URL = http://%s:%d/app.html              \n", ipaddr, port);
     printf("-----------------------------------------------------------\n");
     printf("  __          ________ _______\n");
     printf("  \\ \\        / /  ____|  _____\\\n");
@@ -114,11 +116,17 @@ void Logo(const char *ipaddr,const char *port)
  * @param  **argv:
  * @retval
  ***************************************************/
+void* Handle_web_client_connection_events(void *argv)
+{
+    int *connfd = (int*)argv;
+    deal_with_client_request(*connfd);
+}
+
 int main(int argc, char **argv)
 {
     int listenfd, connfd;
     socklen_t clientlen;
-    char *port = NULL;
+    int port = 8080;
     struct sockaddr_in clientaddr;
     if (argc == 1)
     {
@@ -131,7 +139,7 @@ int main(int argc, char **argv)
     }
     else
     {
-        port = argv[1];
+        port = atoi(argv[1]);
     }
     listenfd = Open_listenfd(port);
     char ipaddr[64] = {0};
@@ -141,6 +149,8 @@ int main(int argc, char **argv)
 
     /*信号处理函数,用来处理僵尸进程*/
     signal_r(SIGCHLD, sigchild_handler);
+
+    pthread_t thread_web;
     while (1)
     {
         clientlen = sizeof(clientaddr);
@@ -151,17 +161,8 @@ int main(int argc, char **argv)
             else
                 printf("Accept error...");
         }
-
-        pid_t pid = Fork();
-        if (pid == 0)
-        {
-            deal_with_client_request(connfd);
-            Close(connfd);
-            exit(0);
-        }
-        else
-        {
-            Close(connfd);
-        }
+        
+        pthread_create(&thread_web, NULL, Handle_web_client_connection_events, (void*)&connfd);
+        pthread_join(thread_web, NULL);
     }
 }

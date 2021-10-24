@@ -34,12 +34,12 @@ void get_local_ip_addr(char *local_ipaddr, int length)
         fprintf(stderr, "[%s][%d]input is NULL\n", __FILE__, __LINE__);
         return;
     }
-    char *cmd = "ifconfig | grep inet | grep -v inet6 | grep -v 127 | sed 's/^[ \t]*//g' | cut -d ' ' -f2";
+    char *cmd = "ifconfig | grep -E -o '(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)' | grep -v 255 | grep -v 127.0.0.1";
     my_system(cmd, local_ipaddr, length);
     return;
 }
 
-int open_listenfd(char *port)
+int open_listenfd(int port)
 {
     int optval = 1;
     struct sockaddr_in serveraddr;
@@ -56,11 +56,12 @@ int open_listenfd(char *port)
     bzero((char *)&serveraddr, sizeof(serveraddr));
     
     serveraddr.sin_family = AF_INET;
-    //serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);
+    // serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);
     char local_ip[64] = {0};
     get_local_ip_addr(local_ip, sizeof(local_ip));
+    printf("local_ip = %s\n", local_ip);
     serveraddr.sin_addr.s_addr = inet_addr(local_ip);
-    serveraddr.sin_port = htons((unsigned short)atoi(port));
+    serveraddr.sin_port = htons(port);
 
     if (bind(listenfd, (SA *)&serveraddr, sizeof(serveraddr)) < 0)
         return -1;
@@ -71,7 +72,7 @@ int open_listenfd(char *port)
     return listenfd;
 }
 
-int Open_listenfd(char *port)
+int Open_listenfd(int port)
 {
     int rc;
     if ((rc = open_listenfd(port)) < 0)
@@ -106,4 +107,25 @@ void clienterror(int fd, char *cause, char *errnum, char *shortmsg, char *longms
     sprintf(buf, "Content-length: %d\r\n\r\n", (int)strlen(body));
     Rio_writen(fd, buf, strlen(buf));
     Rio_writen(fd, body, strlen(body));
+}
+
+int connect_server(int port)
+{
+    int socket_fd = socket(AF_INET, SOCK_STREAM, 0);
+    if(-1 == socket_fd)
+    {
+        fprintf(stderr, "[%s][%d]: socket failed\n", __FILE__, __LINE__);
+        return -1;
+    }
+    struct sockaddr_in serveraddr;
+    serveraddr.sin_family = AF_INET;
+    char local_ip[64] = {0};
+    get_local_ip_addr(local_ip, sizeof(local_ip));
+    serveraddr.sin_addr.s_addr = inet_addr(local_ip);
+    serveraddr.sin_port = htons(port);
+
+    socklen_t addrlen = sizeof(serveraddr);
+    connect(socket_fd, (struct sockaddr *)&serveraddr, addrlen);
+
+    return socket_fd; 
 }

@@ -118,7 +118,7 @@ void log_in_check(int fd, char *argv)
     check_user_password(fd, "pwd=123&pwd=456");
 }
 
-void play_surveillance_screen(int fd, char *argv)
+void get_video_data(int fd, char *argv)
 {
 
 }
@@ -130,8 +130,8 @@ void play_surveillance_screen(int fd, char *argv)
  #define POST_REQUEST_MAX  (sizeof(public_post_request)/sizeof(public_post_request[0]))
 
 cgi_public public_post_request[] = {
-    {"/cgi-xjh/log_in_check", log_in_check},
-    {"/cgi-xjh/play_surveillance_screen", play_surveillance_screen},
+    {"/cgi-post/log_in_check", log_in_check},
+    {"/cgi-post/get_video_data", get_video_data},
 };
 /****************************************************
  * @brief  
@@ -142,16 +142,18 @@ cgi_public public_post_request[] = {
  ***************************************************/
 void deal_with_post_request(int fd, char *url)
 {
-    char argvs[128] = "", *p = NULL;
+    printf("[--->]url = %s\n", url);
+    char argvs[128] = "", real_url[128] = {0}, *p = NULL;
     if(p = strchr(url, '?'))
     {
+        snprintf(real_url, p-url+1, "%s", url);
         sscanf(p, "?%[^&]", argvs);
     }
   
     int i = 0;
     for (i = 0; i < POST_REQUEST_MAX; i++)
     {
-        if(!strcmp(url, public_post_request[i].url))
+        if(!strcmp(real_url, public_post_request[i].url))
         {
             public_post_request[i].callback_function(fd, argvs);
         }

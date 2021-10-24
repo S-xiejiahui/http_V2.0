@@ -5,7 +5,7 @@
 #include "cJSON.h"
 
 #define ERROR 0
-#define PORT "8080"
+#define PORT 8080
 
 typedef struct Cgi_public
 {

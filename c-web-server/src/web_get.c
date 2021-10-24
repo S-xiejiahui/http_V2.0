@@ -3,6 +3,7 @@
 #include "server.h"
 #include "cJSON.h"
 #include "file.h"
+#include "client.h"
 
 #include <dirent.h>
 #include <string.h>
@@ -200,29 +201,17 @@ void send_response_msg(int fd, char *send_msg, int msg_length)
  * @note   
  * @note   
  ***************************************************/
-void send_response_picture(int fd, char *send_picture)
-{
-    int srcfd = open(send_picture, O_RDONLY);
-    if(srcfd < 0)
-    {
-        fprintf(stderr, "send %s failed\n", send_picture);
-        return;
-    }
-    int filesize = get_filesize(send_picture);
-    char *fp = Mmap(0, filesize, PROT_READ, MAP_SHARED, srcfd, 0);
-    
+void send_response_picture(int fd, char *frame, int frame_length)
+{    
     char body[20480] = {0};
     int count = 0;
     count += snprintf(body + count, sizeof(body) - count, "HTTP/1.1 200 OK\r\n");
     count += snprintf(body + count, sizeof(body) - count, "Server: XJH Web Server\r\n");
     count += snprintf(body + count, sizeof(body) - count, "Connection:close\r\n");
-    count += snprintf(body + count, sizeof(body) - count, "Content-length: %d\r\n", filesize);
+    count += snprintf(body + count, sizeof(body) - count, "Content-length: %d\r\n", frame_length);
     count += snprintf(body + count, sizeof(body) - count, "Content-type: image/jpeg;charset=utf-8\r\n\r\n");
     Rio_writen(fd, body, strlen(body));
-    Rio_writen(fd, fp, filesize);
-
-    Munmap(fp, filesize);
-    close(srcfd);
+    Rio_writen(fd, frame, frame_length);
 }
 /****************************************************
  * @brief  
@@ -248,20 +237,40 @@ void get_file_content(int fd, char *argv)
     return;
 }
 
+void start_receive_frame(int fd, char *argv)
+{
+    start_receive_video_data(8090);
+}
+
+void stop_receive_frame(int fd, char *argv)
+{
+    stop_receive_video_data();
+}
+
 void get_video_picture(int fd, char *argv)
 {
-    if(NULL == argv)
+    int  frame_length = 0;
+    char frame[51200] = {0};
+    if(get_a_frame_of_image(frame, &frame_length))
     {
-        return;
+        send_response_picture(fd, frame, frame_length);
     }
-    printf("argv = %s\n", argv);
-    char key[32] = {0}, value[32] = {0};
-    sscanf(argv, "%[^=]=%[^&]", key, value);
-    printf("key = %s, value = %s\n", key, value);
-    if(!strcmp("filename", key))
+    else
     {
-        send_response_picture(fd, value);
+        printf("[%s][%d]: server video is NULL\n", __FILE__, __LINE__);
     }
+    // if(NULL == argv)
+    // {
+    //     return;
+    // }
+    // printf("argv = %s\n", argv);
+    // char key[32] = {0}, value[32] = {0};
+    // sscanf(argv, "%[^=]=%[^&]", key, value);
+    // printf("key = %s, value = %s\n", key, value);
+    // if(!strcmp("filename", key))
+    // {
+    //     send_response_picture(fd, value);
+    // }
     return;
 }
 
@@ -284,9 +293,11 @@ void get_detailed_info(int fd, char *argv)
  #define GET_REQUEST_MAX  (sizeof(public_get_request)/sizeof(public_get_request[0]))
 
 cgi_public public_get_request[] = {
-    {"/cgi-xjh/get_file_content", get_file_content},
-    {"/cgi-xjh/get_video_picture", get_video_picture},
-    {"/cgi-xjh/get_detailed_info", get_detailed_info},
+    {"/cgi-xjh/get_file_content", get_file_content},    // 获取某个文件中的内容
+    {"/cgi-xjh/get_detailed_info", get_detailed_info},  // 获取文件详情：大小，子文件数目
+    {"/cgi-xjh/start_receive_frame", start_receive_frame},// 开始连接服务器摄像头
+    {"/cgi-xjh/stop_receive_frame", stop_receive_frame},   //结束摄像头连接
+    {"/cgi-xjh/get_video_picture", get_video_picture},  //获取服务器摄像头捕捉的一帧画面
 };
 /****************************************************
  * @brief  
@@ -297,7 +308,7 @@ cgi_public public_get_request[] = {
  ***************************************************/
 void deal_with_get_request(int fd, char *url)
 {
-    printf("url = %s\n", url);
+    printf("[%s][%d]url = %s\n", __FILE__, __LINE__, url);
     cJSON *root = cJSON_CreateObject();
     char filename[128] = {0}, cgi_argv[128] = {0};
 

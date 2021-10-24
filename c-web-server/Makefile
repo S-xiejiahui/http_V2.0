@@ -1,7 +1,7 @@
 # The target file name
 TARGET := http
 # The compiler
-CC    := gcc
+CC    := arm-linux-gcc
 # The source file
 SRC   := ./src
 CSRCS := $(wildcard $(SRC)/*.c)
@@ -22,6 +22,7 @@ FIND_NAME = $(shell find -name obj)
 all: update $(TARGET)
 $(TARGET): $(OBJS) 
 	$(CC) $+ $(INCS) $(LIBS) -o $@  $(CFLAG)
+	cp $(TARGET) /tftpboot
 	cp $(TARGET) ../bin
 
 $(OBJ)/%.o:$(SRC)/%.c

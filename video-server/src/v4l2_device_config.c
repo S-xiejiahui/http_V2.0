@@ -198,7 +198,7 @@ extern int v4l2_request_video_buffer(void)
  * @note:
  * @return;
  *********************************************************/
-extern int v4l2_start_collecting(Queue *queue_display)
+extern int v4l2_start_collecting(Queue *queue_display, Queue * queue_server)
 {
 	enum v4l2_buf_type type;
 	type = V4L2_BUF_TYPE_VIDEO_CAPTURE;				//视频录制
@@ -244,6 +244,7 @@ extern int v4l2_start_collecting(Queue *queue_display)
 				//上锁
 				pthread_mutex_lock(&mutex);
 				push_queue(queue_display, ub[vbuf.index].start);
+				push_queue(queue_server , ub[vbuf.index].start);
 				pthread_mutex_unlock(&mutex);
 				
 				//预留在这个位置需要 将视频显示在 lcd屏幕上  xxxx  关键任务的核心 在这个位置 即采集到的数据如何取显示 

@@ -12,7 +12,7 @@ extern int v4l2_set_video_format(void);
 /*申请摄像头映射内存*/
 extern int v4l2_request_video_buffer(void);
 /*开始视频采集*/
-extern int v4l2_start_collecting(Queue *queue_display);
+extern int v4l2_start_collecting(Queue *queue_display, Queue * queue_server);
 /*结束视频采集*/
 extern int v4l2_end_of_acquisition(void);
 /*回收映射内存*/
