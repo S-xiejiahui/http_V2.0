@@ -15,7 +15,7 @@ LIBS  := -L./lib
 OBJ   := ./obj
 OBJS  := $(patsubst $(SRC)/%.c, $(OBJ)/%.o, $(CSRCS))
 # Check whether the OBj folder exists
-FIND_NAME = $(shell cd c-web-server | find -name obj)
+FIND_NAME = $(shell find -name obj)
 
 # Compiling method
 all: init $(TARGET)
