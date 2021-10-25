@@ -4,18 +4,17 @@
 ### 下载仓储
 <pre>
     使用Ubuntu git工具，克隆我的工程代码：
-    git clone https://github.com/S-xiejiahui/http_v1.0.git 
+    git clone https://github.com/S-xiejiahui/http_v2.1.git 
     ps： 1、Ubuntu要能联网，2、如果不能联网，点击上方的Code下载zip压缩包
 </pre>
 ### 服务器怎么运行：
 <pre>
     1、make(make all)编译工程，将会生成一个 http 的可执行文件
-    2、使用make update命令，将文件中的 ip 地址更改为你本地的 ip 地址
-    3、运行服务器：./http（默认端口号8080）
-      或者 ./http 8080（8080指服务器的端口号，可自行指定）
-    4、访问服务器：浏览器输入 http://Ip地址:8080/app.html (ex：http://192.168.1.1:8080/app.html) 
+    2、运行服务器：./bin/http（默认端口号8080）
+      或者 ./bin/http 8080（8080指服务器的端口号，可自行指定）
+    3、访问服务器：浏览器输入 http://Ip地址:8080/app.html (ex：http://192.168.1.1:8080/app.html) 
       或者 http://localhost:8080/app.html (注意：ubuntu上可以，但是用Windows浏览器访问不了)
-    5、服务器启动成功
+    4、服务器启动成功
 </pre>
 ### 配置git-ssh，让Ubuntu能上传文件到我的GitHub
 <pre>
@@ -42,8 +41,11 @@
 ### 目录结构:
 <pre>
     ├── Readme.md       // help
-    ├── http            // web服务器--可执行文件
-    ├── app.html        // 主页面
+    ├── bin             // 可执行文件目录
+    │ ├── http          // web服务器
+    │ ├── video         // 视频监控服务器
+    │ └── ...
+    ├── html            // html页面代码
     ├── Makefile        // 编译工具链
     ├── c-web-server    // c语言web服务器文件
     │ ├── inc
@@ -51,13 +53,6 @@
     │ ├── lib
     │ ├── lib-h
     │ └── ...
-    ├── icon            //图片文件夹
-    │ ├── ...
-    │ └── ...
-    ├── css             //html所需的css文件
-    │ ├── ...
-    │ └── ...
-    └── js              //html所需的css文件
     │ ├── ...
     │ └── ...
     └── ...
@@ -65,3 +60,4 @@
 ### 每日更新内容（记录每一点进步）：
 >[2021/10/13]优化：解决访问服务器，无法加载css和svg图片问题（终于找到错误了：用时两天）<br>
 >[2021/10/14]优化：新增make update方法，解决下载代码后，js文件的ip地址不是本地地址，造成无法正确访问服务器的问题<br>
+>[2021/10/24]升级：代码融合视频监控项目，迭代升级V2.0<br>
