@@ -1,7 +1,7 @@
 # The target file name
 TARGET := http
 # The compiler
-CC    := arm-linux-gcc
+CC    := gcc
 # The source file
 SRC   := ./src
 CSRCS := $(wildcard $(SRC)/*.c)

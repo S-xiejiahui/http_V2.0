@@ -5,7 +5,7 @@ JS_FILE_IP_ADDR = $(shell grep -E -o '(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(2
 OLD_IP = $(shell echo $(JS_FILE_IP_ADDR)| cut -d ' ' -f 1)
 
 # Update IP to match local
-files := ../js/app.js
+files := js/app.js
 
 all:
 	@sed -i 's/$(OLD_IP)/$(LOACL_IP_ADDR)/' $(files)
