@@ -19,7 +19,7 @@ OBJS  := $(patsubst $(SRC)/%.c, $(OBJ)/%.o, $(CSRCS))
 FIND_NAME = $(shell find -name obj)
 
 # Compiling method
-all: update $(TARGET)
+all: init $(TARGET)
 $(TARGET): $(OBJS) 
 	$(CC) $+ $(INCS) $(LIBS) -o $@  $(CFLAG)
 	cp $(TARGET) /tftpboot
@@ -28,11 +28,10 @@ $(TARGET): $(OBJS)
 $(OBJ)/%.o:$(SRC)/%.c
 	$(CC) -c $< $(INCS) -o $@ $(CFLAG)
 
-update:
+init:
 ifeq ($(FIND_NAME), )
 	@mkdir $(OBJ)
-	@chmod 777 ./ -R
-	@git config --add core.filemode false
+	@echo "---init successfully---";
 endif
 
 # Clean up the file

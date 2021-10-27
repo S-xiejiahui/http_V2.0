@@ -30,6 +30,7 @@ $(OBJ)/%.o:$(SRC)/%.c
 init:
 ifeq ($(FIND_NAME), )
 	@mkdir $(OBJ)
+	@echo "---init successfully---";
 endif
 
 

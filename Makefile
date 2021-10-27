@@ -1,8 +1,9 @@
-# 编译的文件
+# 要编译的文件
 FILES += c-web-server
 FILES += video-server
 OTHER_FILES := html
 
+# 要临时生成的文件
 FIND_BIN  := $(shell find . -name bin)
 SUBDIRS   := $(shell dirname `find . -name "makefile" -o -name "Makefile"`)
 DIR_INDEX  := $(patsubst %, %/, $(SUBDIRS))
@@ -16,7 +17,7 @@ OLD_IP = $(shell echo $(JS_FILE_IP_ADDR)| cut -d ' ' -f 1)
 # 编译整个工程
 all:
 ifeq ($(FIND_BIN), )
-	mkdir bin
+	@mkdir bin
 	@for i in $(FILES);do \
 		make -C $$i $@ || exit $?; \
 	done
@@ -28,7 +29,12 @@ endif
 
 # 工程初始化
 init:
-	make -C $(OTHER_FILES)
+	@for i in $(FILES);do \
+		make init -C $$i; \
+	done
+	@chmod 777 ./ -R
+	@git config --add core.filemode false
+
 
 info:
 #	@sed -i 's/$(OLD_IP)/$(LOACL_IP_ADDR)/' $(files)
@@ -73,10 +79,9 @@ clean:
 
 # 将工程复原成编译前的状态
 recovery: 
-	-rm -rf bin
+	@-rm -rf bin
 	@for i in $(FILES);do \
-		make clean -C $$i; \
 		rm -rf $$i/obj; \
 	done
-
+	@echo "\n\t---recovery successfully---\n"
 
