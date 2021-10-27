@@ -34,11 +34,6 @@ ifeq ($(FIND_NAME), )
 	@chmod 777 ./ -R
 	@git config --add core.filemode false
 endif
-	
-info:
-	@echo "----------   Url Download Path   ----------\n"
-	@echo "\033[36m$(shell git remote -v | grep -v fetch | awk '{print $$2}')\033[0m"
-	@echo "\n-------------------------------------------"
 
 # Clean up the file
 clean:
