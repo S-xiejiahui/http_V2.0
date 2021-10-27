@@ -42,5 +42,5 @@ info:
 
 # Clean up the file
 clean:
-	rm -r $(OBJS) 
-	rm -r $(TARGET)
+	rm -rf $(OBJS) 
+	rm -rf $(TARGET)
