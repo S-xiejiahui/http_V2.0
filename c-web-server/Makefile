@@ -22,8 +22,8 @@ FIND_NAME = $(shell find -name obj)
 all: init $(TARGET)
 $(TARGET): $(OBJS) 
 	$(CC) $+ $(INCS) $(LIBS) -o $@  $(CFLAG)
-	cp $(TARGET) /tftpboot
 	cp $(TARGET) ../bin
+	cp $(TARGET) /tftpboot
 
 $(OBJ)/%.o:$(SRC)/%.c
 	$(CC) -c $< $(INCS) -o $@ $(CFLAG)

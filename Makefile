@@ -39,8 +39,8 @@ init:
 info:
 #	@sed -i 's/$(OLD_IP)/$(LOACL_IP_ADDR)/' $(files)
 	@echo "-----------------local_IP-------------------\n"
-	@echo "\t      \033[31m$(LOACL_IP_ADDR)\033[0m\n"
-	@echo "--------------Url Download Path-------------\n"
+	@for ip in $(LOACL_IP_ADDR);do echo "\t      \033[31m$$ip\033[0m"; done
+	@echo "\n--------------Url Download Path-------------\n"
 	@echo "  \033[36m$(shell git remote -v | grep -v fetch | awk '{print $$2}')\033[0m"
 	@echo "\n--------------------------------------------"
 
