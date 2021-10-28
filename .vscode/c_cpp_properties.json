@@ -1,23 +1,18 @@
 {
     "configurations": [
         {
-            "name": "wsl",
+            "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
-                "./c-web-server/inc",
-                "./video-server/inc",
-                "./video-server/lib-include"
+                "/mnt/f/share/http_v2.1/c-web-server/inc",
+                "/mnt/f/share/http_v2.1/video-server/inc",
+                "/mnt/f/share/http_v2.1/video-server/lib-include"
             ],
             "defines": [],
-            "compilerPath": "/usr/bin/gcc",
-            "cStandard": "c11",
-            "cppStandard": "c++11",
-            "intelliSenseMode": "linux-gcc-x64",
-            "browse": {
-                "path": [
-                    "${workspaceFolder}/**"
-                ]
-            }
+            "compilerPath": "/bin/gcc",
+            "cStandard": "gnu17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "linux-gcc-x64"
         }
     ],
     "version": 4
