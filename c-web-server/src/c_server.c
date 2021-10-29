@@ -39,7 +39,7 @@ void get_local_ip_addr(char *local_ipaddr, int length)
     return;
 }
 
-int open_listenfd(int port)
+int open_listenfd(int port, const char *ip)
 {
     int optval = 1;
     struct sockaddr_in serveraddr;
@@ -59,8 +59,14 @@ int open_listenfd(int port)
     // serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);
     char local_ip[64] = {0};
     get_local_ip_addr(local_ip, sizeof(local_ip));
-    printf("local_ip = %s\n", local_ip);
-    serveraddr.sin_addr.s_addr = inet_addr(local_ip);
+    if(ip)
+    {
+        serveraddr.sin_addr.s_addr = inet_addr(ip);
+    }
+    else
+    {
+        serveraddr.sin_addr.s_addr = inet_addr(local_ip);
+    }
     serveraddr.sin_port = htons(port);
 
     if (bind(listenfd, (SA *)&serveraddr, sizeof(serveraddr)) < 0)
@@ -72,10 +78,10 @@ int open_listenfd(int port)
     return listenfd;
 }
 
-int Open_listenfd(int port)
+int Open_listenfd(int port, const char *ip)
 {
     int rc;
-    if ((rc = open_listenfd(port)) < 0)
+    if ((rc = open_listenfd(port, ip)) < 0)
         unix_error("open_listenfd error");
     return rc;
 }

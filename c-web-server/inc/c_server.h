@@ -2,7 +2,7 @@
 #define __SERVER_H__
 
 /* create Server */
-int  Open_listenfd(int port);
+int Open_listenfd(int port, const char *ip);
 
 /* create client */
 int connect_server(int port);

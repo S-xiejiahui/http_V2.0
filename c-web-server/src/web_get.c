@@ -1,6 +1,6 @@
 #include "main.h"
 #include "public.h"
-#include "server.h"
+#include "c_server.h"
 #include "cJSON.h"
 #include "file.h"
 #include "client.h"

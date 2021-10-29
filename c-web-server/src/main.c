@@ -2,7 +2,7 @@
 #include "public.h"
 #include "web_get.h"
 #include "web_post.h"
-#include "server.h"
+#include "c_server.h"
 
 #include <pthread.h>
 
@@ -118,6 +118,7 @@ void Logo(const char *ipaddr, int port)
  ***************************************************/
 void* Handle_web_client_connection_events(void *argv)
 {
+    pthread_detach(pthread_self());
     int *connfd = (int*)argv;
     deal_with_client_request(*connfd);
 }
@@ -126,25 +127,21 @@ int main(int argc, char **argv)
 {
     int listenfd, connfd;
     socklen_t clientlen;
+    char *ip = NULL;
     int port = 8080;
     struct sockaddr_in clientaddr;
-    if (argc == 1)
-    {
-        port = PORT;
-    }
-    else if (argc != 2)
-    {
-        fprintf(stderr, "Usage: %s <port>\n", argv[0]);
-        exit(1);
-    }
-    else
-    {
-        port = atoi(argv[1]);
-    }
-    listenfd = Open_listenfd(port);
+
     char ipaddr[64] = {0};
     get_local_ip_addr(ipaddr, sizeof(ipaddr));
-    Logo(ipaddr, port);
+    switch (argc)
+    {
+        case 1: port = PORT;            Logo(ipaddr, port); break;
+        case 2: port = atoi(argv[1]);   Logo(ipaddr, port); break;
+        case 3: port = atoi(argv[1]);   ip = argv[2];   Logo(ip, port); break;
+        default:fprintf(stderr, "Usage: %s <port>\n", argv[0]); exit(1);
+        break;
+    }
+    listenfd = Open_listenfd(port, ip);
     printf("The web server has been started.....\n");
 
     /*信号处理函数,用来处理僵尸进程*/

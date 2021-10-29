@@ -1,5 +1,5 @@
 #include "public.h"
-#include "server.h"
+#include "c_server.h"
 #include "queue.h"
 
 #include <pthread.h>
