@@ -86,7 +86,7 @@ void serve_static(int fd, char *filename, int filesize)
 
     char *srcp = Mmap(0, filesize, PROT_READ, MAP_PRIVATE, srcfd, 0);
     Close(srcfd);
-
+    
     Rio_writen(fd, srcp, filesize);
     Munmap(srcp, filesize);
 }
@@ -341,4 +341,5 @@ void deal_with_get_request(int fd, char *url)
         }
         return;
     }
+    Close(fd);
 }

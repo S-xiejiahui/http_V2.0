@@ -91,7 +91,6 @@ recovery:
 usage:
 	@echo "---------------------     make    -----------------------"
 	@echo "You can use \033[33m'make info'\033[0m to view local IP"
-	@echo "You can use \033[33m'make init'\033[0m to init the project"
 	@echo "You can use \033[33m'make image'\033[0m package files"
 	@echo "You can use \033[33m'make clean'\033[0m clean files"
 	@echo "You can use \033[33m'make .../_only(_clean)'\033[0m to make(clean) a directory you want"

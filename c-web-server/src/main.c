@@ -178,7 +178,7 @@ int main(int argc, char **argv)
             else
                 printf("Accept error...");
         }
-        
+        printf("port = %d, addr = %s\n", ntohs(clientaddr.sin_port), inet_ntoa(clientaddr.sin_addr));
         pthread_create(&thread_web, NULL, Handle_web_client_connection_events, (void*)&connfd);
         pthread_join(thread_web, NULL);
     }
