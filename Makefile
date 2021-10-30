@@ -38,7 +38,6 @@ init:
 	@chmod 777 ./ -R
 	@git config --add core.filemode false
 
-
 info:
 #	@sed -i 's/$(OLD_IP)/$(LOACL_IP_ADDR)/' $(files)
 	@echo "-----------------local_IP-------------------\n"
