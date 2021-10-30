@@ -92,6 +92,18 @@ void deal_with_client_request(int fd)
  ***************************************************/
 void Logo(const char *ipaddr, int port)
 {
+    char v[16] = {0}, version[16] = {0};
+    my_system("git remote -v | grep -v fetch |  tr -cd \"[0-9]\"", v, sizeof(v));
+    int length = strlen(v), i = 0, j = 0;
+    for (i = 0, j = 0; i < length; i++)
+    {
+        version[j++] = v[i];
+        if (v[i+1] != '\0')
+        {
+            version[j++] = '.';
+        }
+    }
+    
     printf("-----------------------------------------------------------\n");
     printf("         URL = http://%s:%d/app.html              \n", ipaddr, port);
     printf("-----------------------------------------------------------\n");
@@ -103,10 +115,9 @@ void Logo(const char *ipaddr, int port)
     printf("      \\/  \\/   |______|_______/  __)|__ \\/ |__|   \\\n");
     printf("\n");
     printf("            Welcome to use the Web Server!\n");
-    printf("                     Version 1.2\n\n");
+    printf("                     Version %s\n\n", version);
     printf("                         XJH\n");
-    printf("-----------------------------------------------------------\n\n");
-
+    printf("-----------------------------------------------------------\n");
     return;
 }
 /****************************************************
@@ -135,11 +146,20 @@ int main(int argc, char **argv)
     get_local_ip_addr(ipaddr, sizeof(ipaddr));
     switch (argc)
     {
-        case 1: port = PORT;            Logo(ipaddr, port); break;
-        case 2: port = atoi(argv[1]);   Logo(ipaddr, port); break;
-        case 3: port = atoi(argv[1]);   ip = argv[2];   Logo(ip, port); break;
-        default:fprintf(stderr, "Usage: %s <port>\n", argv[0]); exit(1);
-        break;
+        case 1: port = PORT;    Logo(ipaddr, port); break;
+        case 2: if(strchr(argv[1], '.'))
+                {
+                    port = PORT;
+                    ip = argv[1];
+                    Logo(ip, port);
+                }
+                else
+                {
+                    port = atoi(argv[1]);
+                    Logo(ipaddr, port);
+                }                                                           break;
+        case 3: port = atoi(argv[1]);   ip = argv[2];   Logo(ip, port);     break;
+        default:fprintf(stderr, "Usage: %s <port>\n", argv[0]); exit(1);    break;
     }
     listenfd = Open_listenfd(port, ip);
     printf("The web server has been started.....\n");

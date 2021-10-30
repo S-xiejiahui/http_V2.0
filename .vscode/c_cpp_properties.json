@@ -9,7 +9,7 @@
                 "/mnt/f/share/http_v2.1/video-server/lib-include"
             ],
             "defines": [],
-            "compilerPath": "/bin/gcc",
+            "compilerPath": "/usr/bin/gcc",
             "cStandard": "gnu17",
             "cppStandard": "c++17",
             "intelliSenseMode": "linux-gcc-x64"

@@ -308,7 +308,7 @@ cgi_public public_get_request[] = {
  ***************************************************/
 void deal_with_get_request(int fd, char *url)
 {
-    printf("[%s][%d]url = %s\n", __FILE__, __LINE__, url);
+    //printf("[%s][%d]url = %s\n", __FILE__, __LINE__, url);
     cJSON *root = cJSON_CreateObject();
     char filename[128] = {0}, cgi_argv[128] = {0};
 

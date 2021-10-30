@@ -1,6 +1,6 @@
 # 要编译的文件
 FILES += c-web-server
-FILES += video-server
+#FILES += video-server
 OTHER_FILES := html
 
 # 要临时生成的文件
@@ -26,6 +26,9 @@ else
 		make -C $$i $@ || exit $?; \
 	done
 endif
+	@echo "\n---------------------     Usage    -----------------------"
+	@echo "\tYou can use \033[33m'make usage'\033[0m to view The manual"
+	@echo "-----------------------------------------------------------"
 
 # 工程初始化
 init:
@@ -48,11 +51,11 @@ info:
 image:
 ifeq ($(FIND_BIN), )
 	@echo "\033[33m--The bin file could not be found---\033[0m"
-	@echo "Please perform \033[31m'make' or 'make all'\033[0m"
+	@echo "Please perform \033[31m'make'\033[0m or \033[31m'make all'\033[0m"
 else
 	@tar -cvf image.tar bin html > /dev/null
 	@cp image.tar /tftpboot
-	@echo "\033[33m---The compressed file is successfully created---\033[0m"	
+	@echo "\033[33m---The compressed file(image.tar) is successfully created---\033[0m"	
 endif
 
 # 编译单个目录
@@ -85,3 +88,16 @@ recovery:
 	done
 	@echo "\n\t---recovery successfully---\n"
 
+usage:
+	@echo "---------------------     make    -----------------------"
+	@echo "You can use \033[33m'make info'\033[0m to view local IP"
+	@echo "You can use \033[33m'make init'\033[0m to init the project"
+	@echo "You can use \033[33m'make image'\033[0m package files"
+	@echo "You can use \033[33m'make clean'\033[0m clean files"
+	@echo "You can use \033[33m'make .../_only(_clean)'\033[0m to make(clean) a directory you want"
+	@echo "---------------------     Usage    -----------------------"
+	@echo "Usage 1:     \033[36m./bin/http\033[0m (default:  port = 8080; ip = localhost)"
+	@echo "Usage 2:     \033[36m./bin/http <ip>\033[0m"
+	@echo "Usage 3:     \033[36m./bin/http <port>\033[0m"
+	@echo "Usage 4:     \033[36m./bin/http <port> <ip>\033[0m"
+	@echo "-----------------------------------------------------------"
