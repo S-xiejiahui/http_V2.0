@@ -45,10 +45,10 @@
     <div class="father" style="width: 100%; height: 600px;">
         <div class="title" style="width: 100%; height: 120px; background-color: white;">Welcome to video XJH !!</div>
         <div class="son" style="width: 100%; height: 480px; background:darkgray;">
-            <div class="gson" style="width: 50%; height: 480px; background: #000;"><img src="" alt="" id="display"></div>
+            <div class="gson" style="width: 800px; height: 480px; background: #000;"><img src="" alt="" id="display"></div>
         </div>
     </div>
-    <button style="width: 100; height: 60px;" id="get_pic"> GET </button>
+    <!-- <button style="width: 100; height: 60px;" id="get_pic"> GET </button> -->
 </body>
 <script src="js/jquery.js"></script>
     <script>
@@ -73,7 +73,7 @@
         var t1 = window.setInterval(refreshCount, 100);
         function refreshCount() {
             console.log("ready");
-            img.src = "cgi-xjh/get_video_picture"; //?filename=icon/jpg/" + timer + '.jpg';
+            img.src = "icon/jpg/1.jpg"; //?filename=icon/jpg/" + timer + '.jpg';
             timer = timer > 2 ? 1 : timer + 1;
         }
         //去掉定时器的方法  
