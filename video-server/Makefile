@@ -17,14 +17,17 @@ OBJS  := $(patsubst $(SRC)/%.c, $(OBJ)/%.o, $(CSRCS))
 # bin
 BIN   := ../bin
 # Check whether the OBj folder exists
-FIND_OBJ = $(shell find -name obj)
-FIND_BIN = $(shell find ../ -name bin)
+FIND_OBJ = $(shell find .  -maxdepth 1 -name "obj")
+FIND_BIN = $(shell find .. -maxdepth 1 -name "bin")
+FIND_TFTP= $(shell find  / -maxdepth 1 -name "tftpboot")
 
 # Compiling method
 all: init $(TARGET)
 $(TARGET): $(OBJS) 
 	$(CC) $+ $(INCS) $(LIBS) -o $(BIN)/$@  $(CFLAG)
+ifneq ($(FIND_TFTP),)
 	cp $(BIN)/$(TARGET) /tftpboot
+endif
 
 $(OBJ)/%.o:$(SRC)/%.c
 	$(CC) -c $< $(INCS) -o $@ $(CFLAG)
